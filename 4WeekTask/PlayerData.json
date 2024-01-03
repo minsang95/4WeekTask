@@ -1,0 +1,1 @@
+{"Name":"Jack","Level":1,"Class":"전사","Atk":10,"Def":5,"Health":100,"Gold":900,"Exp":0,"IsDead":false,"Weapon":{"Name":"맨손","Atk":0,"Def":0,"Price":0,"Info":"아무것도 들고있지 않습니다.","Equipped":false,"SoldOut":false},"Armor":{"Name":"맨손","Atk":0,"Def":0,"Price":0,"Info":"아무것도 들고있지 않습니다.","Equipped":false,"SoldOut":false},"Dungeon":{"RecommendDef":0,"Damage":0,"Gold":0,"Exp":0}}

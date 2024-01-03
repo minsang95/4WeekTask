@@ -561,14 +561,10 @@ namespace _4weekTask
                 if (choice == 1)
                 {
                     save();
-                    Console.WriteLine("저장이 완료되었습니다.");
-                    Console.ReadLine();
                 }
                 if (choice == 2)
                 {
                     load();
-                    Console.WriteLine("불러오기가 완료되었습니다.");
-                    Console.ReadLine();
                 }
             }
             string filePath = "C:\\VisualStudioProject\\4weekTask\\4weekTask"; // 저장,불러오기 파일 경로
@@ -586,20 +582,32 @@ namespace _4weekTask
                 {
                     sw.Write(JsonConvert.SerializeObject(itemshop));
                 }
+                Console.WriteLine("저장이 완료되었습니다.");
+                Console.ReadLine();
             }
             public void load()
             {
-                using (StreamReader sr = new StreamReader(filePath + "\\PlayerData.json"))
+                if(File.Exists(filePath + "\\PlayerData.json") && File.Exists(filePath + "\\InventoryData.json") && File.Exists(filePath + "\\ShopData.json"))
                 {
-                    player = JsonConvert.DeserializeObject<Warrior>(sr.ReadToEnd());
+                    using (StreamReader sr = new StreamReader(filePath + "\\PlayerData.json"))
+                    {
+                        player = JsonConvert.DeserializeObject<Warrior>(sr.ReadToEnd());
+                    }
+                    using (StreamReader sr = new StreamReader(filePath + "\\InventoryData.json"))
+                    {
+                        inventory = JsonConvert.DeserializeObject<List<Item>>(sr.ReadToEnd());
+                    }
+                    using (StreamReader sr = new StreamReader(filePath + "\\ShopData.json"))
+                    {
+                        itemshop = JsonConvert.DeserializeObject<List<Item>>(sr.ReadToEnd());
+                    }
+                    Console.WriteLine("불러오기가 완료되었습니다.");
+                    Console.ReadLine();
                 }
-                using (StreamReader sr = new StreamReader(filePath + "\\InventoryData.json"))
+                else
                 {
-                    inventory = JsonConvert.DeserializeObject<List<Item>>(sr.ReadToEnd());
-                }
-                using (StreamReader sr = new StreamReader(filePath + "\\ShopData.json"))
-                {
-                    itemshop = JsonConvert.DeserializeObject<List<Item>>(sr.ReadToEnd());
+                    Console.WriteLine("저장된 데이터가 없습니다.");
+                    Console.ReadLine();
                 }
             }
 

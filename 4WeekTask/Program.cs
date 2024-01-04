@@ -94,7 +94,7 @@ namespace _4weekTask
             public void expCheck()
             {
                 Console.WriteLine($"{Dungeon.Exp} 의 경험치를 획득했습니다.");
-                if (Exp == Level)
+                if (Exp >= Level)
                 {
                     ++Level;
                     Exp = 0;

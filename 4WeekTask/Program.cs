@@ -570,37 +570,103 @@ namespace _4weekTask
             string filePath = "C:\\VisualStudioProject\\4weekTask\\4weekTask"; // 저장,불러오기 파일 경로
             public void save()
             {
+                List<Weapon> IWeapon = new List<Weapon>();
+                List<Armor> IArmor = new List<Armor>();
+                List<Weapon> SWeapon = new List<Weapon>();
+                List<Armor> SArmor = new List<Armor>();
+                for(int i = 0; i < inventory.Count; i++)
+                {
+                    if (inventory[i] is Weapon)
+                    {
+                        IWeapon.Add((Weapon)inventory[i]);
+                    }
+                    else
+                    {
+                        IArmor.Add((Armor)inventory[i]);
+                    }
+                }
+                for(int i = 0; i < itemshop.Count; i++)
+                {
+                    if (itemshop[i] is Weapon)
+                    {
+                        SWeapon.Add((Weapon)itemshop[i]);
+                    }
+                    else
+                    {
+                        SArmor.Add((Armor)itemshop[i]);
+                    }
+                }
                 using (StreamWriter sw = new StreamWriter(filePath + "\\PlayerData.json"))
                 {
                     sw.Write(JsonConvert.SerializeObject(player));
                 }
-                using (StreamWriter sw = new StreamWriter(filePath + "\\InventoryData.json"))
+                using (StreamWriter sw = new StreamWriter(filePath + "\\IWData.json"))
                 {
-                    sw.Write(JsonConvert.SerializeObject(inventory));
+                    sw.Write(JsonConvert.SerializeObject(IWeapon));
                 }
-                using (StreamWriter sw = new StreamWriter(filePath + "\\ShopData.json"))
+                using (StreamWriter sw = new StreamWriter(filePath + "\\IAData.json"))
                 {
-                    sw.Write(JsonConvert.SerializeObject(itemshop));
+                    sw.Write(JsonConvert.SerializeObject(IArmor));
+                }
+                using (StreamWriter sw = new StreamWriter(filePath + "\\SWData.json"))
+                {
+                    sw.Write(JsonConvert.SerializeObject(SWeapon));
+                }
+                using (StreamWriter sw = new StreamWriter(filePath + "\\SAData.json"))
+                {
+                    sw.Write(JsonConvert.SerializeObject(SArmor));
                 }
                 Console.WriteLine("저장이 완료되었습니다.");
                 Console.ReadLine();
             }
             public void load()
             {
-                if(File.Exists(filePath + "\\PlayerData.json") && File.Exists(filePath + "\\InventoryData.json") && File.Exists(filePath + "\\ShopData.json"))
+                List<Weapon> IWeapon = new List<Weapon>();
+                List<Armor> IArmor = new List<Armor>();
+                List<Weapon> SWeapon = new List<Weapon>();
+                List<Armor> SArmor = new List<Armor>();
+                List<Item> LDInventory = new List<Item>();
+                List<Item> LDShop = new List<Item>();
+                if (File.Exists(filePath + "\\PlayerData.json"))
                 {
                     using (StreamReader sr = new StreamReader(filePath + "\\PlayerData.json"))
                     {
                         player = JsonConvert.DeserializeObject<Warrior>(sr.ReadToEnd());
                     }
-                    using (StreamReader sr = new StreamReader(filePath + "\\InventoryData.json"))
+                    using (StreamReader sr = new StreamReader(filePath + "\\IWData.json"))
                     {
-                        inventory = JsonConvert.DeserializeObject<List<Item>>(sr.ReadToEnd());
+                        IWeapon = (JsonConvert.DeserializeObject<List<Weapon>>(sr.ReadToEnd()));
                     }
-                    using (StreamReader sr = new StreamReader(filePath + "\\ShopData.json"))
+                    using (StreamReader sr = new StreamReader(filePath + "\\IAData.json"))
                     {
-                        itemshop = JsonConvert.DeserializeObject<List<Item>>(sr.ReadToEnd());
+                        IArmor = (JsonConvert.DeserializeObject<List<Armor>>(sr.ReadToEnd()));
                     }
+                    using (StreamReader sr = new StreamReader(filePath + "\\SWData.json"))
+                    {
+                        SWeapon = (JsonConvert.DeserializeObject<List<Weapon>>(sr.ReadToEnd()));
+                    }
+                    using (StreamReader sr = new StreamReader(filePath + "\\SAData.json"))
+                    {
+                        SArmor = (JsonConvert.DeserializeObject<List<Armor>>(sr.ReadToEnd()));
+                    }
+                    for (int i = 0;i < IWeapon.Count; i++)
+                    {
+                        LDInventory.Add(IWeapon[i]);
+                    }
+                    for(int i = 0;i < IArmor.Count; i++)
+                    {
+                        LDInventory.Add(IArmor[i]);
+                    }
+                    for(int i =0;i < SWeapon.Count; i++)
+                    {
+                        LDShop.Add(SWeapon[i]);
+                    }
+                    for(int i = 0; i < SArmor.Count; i++)
+                    {
+                        LDShop.Add(SArmor[i]);
+                    }
+                    inventory = LDInventory;
+                    itemshop = LDShop;
                     Console.WriteLine("불러오기가 완료되었습니다.");
                     Console.ReadLine();
                 }

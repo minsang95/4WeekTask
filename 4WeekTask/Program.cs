@@ -694,7 +694,7 @@ namespace _4weekTask
                 }
             }
 
-            public void checkInput(int limit, string action)
+            public int checkInput(int limit, string action)
             {
                 string input = Console.ReadLine();
                 int choice;
@@ -703,6 +703,7 @@ namespace _4weekTask
                     Console.WriteLine(action);
                     input = Console.ReadLine();
                 }
+                return choice;
             }
 
             // 플레이어 , 아이템 생성

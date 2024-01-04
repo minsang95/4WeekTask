@@ -694,6 +694,17 @@ namespace _4weekTask
                 }
             }
 
+            public void checkInput(int limit, string action)
+            {
+                string input = Console.ReadLine();
+                int choice;
+                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > limit)
+                {
+                    Console.WriteLine(action);
+                    input = Console.ReadLine();
+                }
+            }
+
             // 플레이어 , 아이템 생성
             Warrior player = new Warrior("Jack");
             List<Item> inventory = new List<Item>();

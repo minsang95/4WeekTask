@@ -193,14 +193,7 @@ namespace _4weekTask
                 Console.Clear();
                 Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n");
                 Console.WriteLine("1. 상태 보기\n2. 인벤토리\n3. 상점\n4. 던전입장\n5. 휴식하기\n6. 저장, 불러오기\n7. 종료\n\n원하시는 행동의 번호를 입력해주세요.");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice <= 0 || choice > 7)
-                {
-                    Console.WriteLine("잘못된 입력입니다.\n1. 상태 보기 2. 인벤토리 3. 상점 4. 던전입장 5. 휴식하기 6. 저장, 불러오기 7. 종료");
-                    input = Console.ReadLine();
-                }
-                return choice;
+                return choiceInput(7, "잘못된 입력입니다.\n1. 상태 보기 2. 인벤토리 3. 상점 4. 던전입장 5. 휴식하기 6. 저장, 불러오기 7. 종료");
             }
 
             public void choice1_status() // 1.상태 보기
@@ -213,13 +206,7 @@ namespace _4weekTask
                                   $"장착 방어구 : {player.Armor.Name} | 공격력 +{player.Armor.Atk} 방어력 +{player.Armor.Def} | {player.Armor.Info}\n" +
                                   $"\n0. 나가기\n");
                 Console.WriteLine("원하시는 행동을 입력해주세요.");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || !(choice == 0))
-                {
-                    Console.WriteLine("0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(0, "0. 나가기");
             }
 
             public void choice2_inventory() // 2.인벤토리
@@ -231,13 +218,7 @@ namespace _4weekTask
                     Console.WriteLine($"- {items.Name} | 공격력 +{items.Atk} 방어력 +{items.Def} | {items.Info}");
                 }
                 Console.WriteLine("\n1. 장착 관리\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > 1)
-                {
-                    Console.WriteLine("\n1. 장착 관리\n0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(1, "\n1. 장착 관리\n0. 나가기");
                 if (choice == 1)
                 {
                     choice2_1_itemEquip();
@@ -255,13 +236,7 @@ namespace _4weekTask
                     number++;
                 }
                 Console.WriteLine("\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice > inventory.Count || choice < 0)
-                {
-                    Console.WriteLine("잘못된 입력입니다.\n장착 또는 장착 해제하실 아이템 번호를 입력해주세요.\n0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(inventory.Count, "잘못된 입력입니다.\n장착 또는 장착 해제하실 아이템 번호를 입력해주세요.\n0. 나가기");
                 if (!(choice == 0))
                 {
                     if (!(inventory[choice - 1].Equipped))
@@ -326,13 +301,7 @@ namespace _4weekTask
                     }
                 }
                 Console.WriteLine("\n1. 아이템 구매\n2. 아이템 판매\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > 2)
-                {
-                    Console.WriteLine("\n1. 아이템 구매\n2. 아이템 판매\n0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(2, "\n1. 아이템 구매\n2. 아이템 판매\n0. 나가기");
                 if (choice == 1)
                 {
                     choice3_1_itembuy();
@@ -361,13 +330,7 @@ namespace _4weekTask
                     number++;
                 }
                 Console.WriteLine("\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice > itemshop.Count || choice < 0)
-                {
-                    Console.WriteLine("잘못된 입력입니다.\n구매하실 아이템 번호를 입력해 주세요.\n0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(itemshop.Count, "잘못된 입력입니다.\n구매하실 아이템 번호를 입력해 주세요.\n0. 나가기");
                 if (!(choice == 0))
                 {
                     if (!(itemshop[choice - 1].SoldOut))
@@ -407,13 +370,7 @@ namespace _4weekTask
                     number++;
                 }
                 Console.WriteLine("0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice > inventory.Count || choice < 0)
-                {
-                    Console.WriteLine("잘못된 입력입니다.\n판매하실 아이템 번호를 입력해 주세요.\n0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(inventory.Count, "잘못된 입력입니다.\n판매하실 아이템 번호를 입력해 주세요.\n0. 나가기");
                 if (!(choice == 0))
                 {
                     if (!(inventory[choice - 1].Equipped))
@@ -444,13 +401,7 @@ namespace _4weekTask
                 Console.Clear();
                 Console.WriteLine("권장 능력치를 확인 후, 입장하실 던전의 번호를 입력해 주세요.\n\n" +
                     "1. 쉬운 던전 | 방어력 5 이상 권장\n2. 일반 던전 | 방어력 11 이상 권장\n3. 어려운 던전 | 방어력 17 이상 권장\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > 3)
-                {
-                    Console.WriteLine("올바른 번호를 입력해 주세요.");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(3, "올바른 번호를 입력해 주세요.");
                 if (choice == 1) // 1번 던전
                 {
                     Dungeon easy = new Dungeon(35, 5, 1000, 1); // 던전초기화 및 생성
@@ -523,13 +474,7 @@ namespace _4weekTask
             {
                 Console.Clear();
                 Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G)\n\n1. 휴식하기\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > 1)
-                {
-                    Console.WriteLine("1. 휴식하기 0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(1, "1. 휴식하기 0. 나가기");
                 if (choice == 1)
                 {
                     if (player.Gold >= 500)
@@ -551,13 +496,7 @@ namespace _4weekTask
             {
                 Console.Clear();
                 Console.WriteLine("게임을 저장하거나, 불러올수 있습니다.\n\n저장은 하나의 데이터로 덮어씌워집니다.\n\n1. 저장하기\n2. 불러오기\n0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > 2)
-                {
-                    Console.WriteLine("1. 저장하기 2. 불러오기 0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(2, "1. 저장하기 2. 불러오기 0. 나가기");
                 if (choice == 1)
                 {
                     save();
@@ -681,20 +620,14 @@ namespace _4weekTask
             {
                 Console.Clear();
                 Console.WriteLine("게임을 포기하시겠습니까?\n\n1. 종료 0. 나가기");
-                string input = Console.ReadLine();
-                int choice;
-                while (!(int.TryParse(input, out choice)) || choice < 0 || choice > 1)
-                {
-                    Console.WriteLine("1. 종료 0. 나가기");
-                    input = Console.ReadLine();
-                }
+                int choice = choiceInput(1, "1. 종료 0. 나가기");
                 if (choice == 1)
                 {
                     player.Health = 0;
                 }
             }
 
-            public int checkInput(int limit, string action)
+            public int choiceInput(int limit, string action)
             {
                 string input = Console.ReadLine();
                 int choice;

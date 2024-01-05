@@ -81,7 +81,8 @@ namespace _4weekTask
                 Random gold = new Random();
                 Gold += gold.Next((int)(Dungeon.Gold + (Dungeon.Gold * Atk * 0.01f)), (int)(Dungeon.Gold + (Dungeon.Gold * Atk * 0.02f)));
                 Exp += Dungeon.Exp;
-                Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {Health}\n획득 골드 : {Gold - before}\n보유 골드 : {Gold}");
+                Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {Health}\n획득 골드 : {Gold - before}\n보유 골드 : {Gold}\n"+
+                                  $"{Dungeon.Exp} 의 경험치를 획득했습니다.");
                 expCheck();
                 Console.ReadLine();
             }
@@ -93,7 +94,6 @@ namespace _4weekTask
             }
             public void expCheck()
             {
-                Console.WriteLine($"{Dungeon.Exp} 의 경험치를 획득했습니다.");
                 if (Exp >= Level)
                 {
                     ++Level;

@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection.Emit;
+using System.Net.Http.Headers;
 
 namespace _4weekTask
 {
@@ -156,7 +157,7 @@ namespace _4weekTask
                                   $"장착 방어구 : {player.Armor.Name} | 공격력 +{player.Armor.Atk} 방어력 +{player.Armor.Def} | {player.Armor.Info}\n" +
                                   $"\n0. 나가기\n");
                 Console.WriteLine("원하시는 행동을 입력해주세요.");
-                int choice = choiceInput(0, "0. 나가기");
+                choiceInput(0, "0. 나가기");
             }
 
             public void choice2_inventory() // 2.인벤토리
@@ -168,8 +169,7 @@ namespace _4weekTask
                     Console.WriteLine($"- {items.Name} | 공격력 +{items.Atk} 방어력 +{items.Def} | {items.Info}");
                 }
                 Console.WriteLine("\n1. 장착 관리\n0. 나가기");
-                int choice = choiceInput(1, "\n1. 장착 관리\n0. 나가기");
-                if (choice == 1)
+                if (choiceInput(1, "\n1. 장착 관리\n0. 나가기") == 1)
                 {
                     choice2_1_itemEquip();
                 }
@@ -568,15 +568,28 @@ namespace _4weekTask
                 }
             }
 
-            public void end()
+            public bool end()
             {
                 Console.Clear();
                 Console.WriteLine("게임을 포기하시겠습니까?\n\n1. 종료 0. 나가기");
-                int choice = choiceInput(1, "1. 종료 0. 나가기");
-                if (choice == 1)
+                if (choiceInput(1, "게임을 포기하시겠습니까?\n\n1. 종료 0. 나가기") == 1)
                 {
-                    player.Health = 0;
+                    return true;
                 }
+                return false;
+            }
+
+            public void Restart()
+            {
+                player = new Warrior("chad");
+                inventory = new List<Item>();
+                itemshop = new List<Item>();
+                itemshop.Add(armor1);
+                itemshop.Add(armor2);
+                itemshop.Add(armor3);
+                itemshop.Add(weapon1);
+                itemshop.Add(weapon2);
+                itemshop.Add(weapon3);
             }
 
             public int choiceInput(int limit, string action)
@@ -591,27 +604,21 @@ namespace _4weekTask
                 return choice;
             }
 
-            // 플레이어, 인벤토리, 상점, 아이템 생성
+            // 플레이어, 인벤토리, 상점, 아이템
             Warrior player = new Warrior("chad");
             List<Item> inventory = new List<Item>();
             List<Item> itemshop = new List<Item>();
-            Weapon weapon1 = new Weapon("낡은 검", 2, 0, 600, "쉽게 볼 수 있는 낡은 검 입니다.");
-            Weapon weapon2 = new Weapon("청동 도끼", 5, 0, 1500, "어디선가 사용됐던거 같은 도끼입니다.");
-            Weapon weapon3 = new Weapon("스파르타의 창", 7, 0, 2100, "스파르타의 전사들이 사용했다는 전설의 창입니다.");
-            Armor armor1 = new Armor("수련자 갑옷", 0, 5, 1000, "수련에 도움을 주는 갑옷입니다.");
-            Armor armor2 = new Armor("무쇠갑옷", 0, 9, 2500, "무쇠로 만들어져 튼튼한 갑옷입니다.");
-            Armor armor3 = new Armor("스파르타의 갑옷", 0, 15, 3500, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.");
-            Weapon emptyWeapon = new Weapon("맨손", 0, 0, 0, "아무것도 들고있지 않습니다.");
-            Armor emptyArmor = new Armor("맨손", 0, 0, 0, "아무것도 들고있지 않습니다.");
+            static Weapon weapon1 = new Weapon("낡은 검", 2, 0, 600, "쉽게 볼 수 있는 낡은 검 입니다.");
+            static Weapon weapon2 = new Weapon("청동 도끼", 5, 0, 1500, "어디선가 사용됐던거 같은 도끼입니다.");
+            static Weapon weapon3 = new Weapon("스파르타의 창", 7, 0, 2100, "스파르타의 전사들이 사용했다는 전설의 창입니다.");
+            static Armor armor1 = new Armor("수련자 갑옷", 0, 5, 1000, "수련에 도움을 주는 갑옷입니다.");
+            static Armor armor2 = new Armor("무쇠갑옷", 0, 9, 2500, "무쇠로 만들어져 튼튼한 갑옷입니다.");
+            static Armor armor3 = new Armor("스파르타의 갑옷", 0, 15, 3500, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.");
+            static Weapon emptyWeapon = new Weapon("맨손", 0, 0, 0, "아무것도 들고있지 않습니다.");
+            static Armor emptyArmor = new Armor("맨손", 0, 0, 0, "아무것도 들고있지 않습니다.");
 
             public void Playgame() // 게임시작
             {
-                itemshop.Add(weapon1);
-                itemshop.Add(weapon2);
-                itemshop.Add(weapon3);
-                itemshop.Add(armor1);
-                itemshop.Add(armor2);
-                itemshop.Add(armor3);
                 while (!(player.IsDead))
                 {
                     int choice = choice0_startScene();
@@ -642,15 +649,32 @@ namespace _4weekTask
                     }
                     if (choice == 7) // 7.게임종료
                     {
-                        end();
+                        if(end())
+                        {
+                            Console.WriteLine("게임을 종료합니다.");
+                            break;
+                        }
+                    }
+                    if (player.IsDead) // 다시 시작
+                    {
+                        Console.WriteLine("당신은 죽었습니다.\n게임을 다시 시작하시겠습니까?\n1. 다시시작   0. 게임 종료");
+                        if (choiceInput(1, "1. 다시시작   0. 게임 종료") == 1)
+                        {
+                            Restart();
+                        }
                     }
                 }
-                Console.WriteLine("당신은 죽었습니다. 게임을 종료합니다.");
             }
 
             static void Main(string[] args)
             {
                 Stage stage = new Stage();
+                stage.itemshop.Add(weapon1);
+                stage.itemshop.Add(weapon2);
+                stage.itemshop.Add(weapon3);
+                stage.itemshop.Add(armor1);
+                stage.itemshop.Add(armor2);
+                stage.itemshop.Add(armor3);
                 stage.Playgame();
             }
 

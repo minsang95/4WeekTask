@@ -412,7 +412,7 @@ namespace _4weekTask
                     player.Health -= (int)(damage - (player.Def - def));
                 if (player.Health <= 0)
                 {
-                    Console.WriteLine($"몬스터게 치명적인 공격({befH - player.Health})을 받았습니다. 현재 체력 : {player.Health}");
+                    Console.WriteLine($"몬스터게 치명적인 공격({befH - player.Health})을 받았습니다.");
                 }
                 else
                 {

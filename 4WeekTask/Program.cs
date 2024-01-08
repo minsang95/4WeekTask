@@ -5,6 +5,8 @@ using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
+using System.Reflection.Emit;
 
 namespace _4weekTask
 {
@@ -23,7 +25,6 @@ namespace _4weekTask
             bool IsDead => Health <= 0;
             Weapon Weapon { get; set; }
             Armor Armor { get; set; }
-            Dungeon Dungeon { get; set; }
         }
         class Warrior : Status
         {
@@ -38,7 +39,6 @@ namespace _4weekTask
             public bool IsDead => Health <= 0;
             public Weapon Weapon { get; set; }
             public Armor Armor { get; set; }
-            public Dungeon Dungeon { get; set; }
             public Warrior(string name)
             {
                 Name = name;
@@ -73,38 +73,6 @@ namespace _4weekTask
                 Atk -= Armor.Atk;
                 Def -= Armor.Def;
                 Armor = new Armor("맨손", 0, 0, 0, "아무것도 들고있지 않습니다.");
-            }
-            public void clearDungeon()
-            {
-                int before = Gold;
-                Health -= (int)(Dungeon.Damage - (Def - Dungeon.RecommendDef));
-                Random gold = new Random();
-                Gold += gold.Next((int)(Dungeon.Gold + (Dungeon.Gold * Atk * 0.01f)), (int)(Dungeon.Gold + (Dungeon.Gold * Atk * 0.02f)));
-                Exp += Dungeon.Exp;
-                Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {Health}\n획득 골드 : {Gold - before}\n보유 골드 : {Gold}\n"+
-                                  $"{Dungeon.Exp} 의 경험치를 획득했습니다.");
-                expCheck();
-                Console.ReadLine();
-            }
-            public void escapeDmg()
-            {
-                Health = (int)(Health * 0.5f);
-                Console.WriteLine($"몬스터를 소탕하지 못하고, 던전을 탈출했습니다.\n현재 체력 : {Health}");
-                Console.ReadLine();
-            }
-            public void expCheck()
-            {
-                if (Exp >= Level)
-                {
-                    ++Level;
-                    Exp = 0;
-                    Def += 1;
-                    if (Level % 2 == 0)
-                    {
-                        Atk += 1;
-                    }
-                    Console.WriteLine($"레벨업!\n현재 레벨 : {Level}");
-                }
             }
         }
         interface Item
@@ -168,24 +136,6 @@ namespace _4weekTask
                 SoldOut = false;
             }
         }
-
-        struct Dungeon
-        {
-            public int RecommendDef { get; set; }
-            public int Damage { get; set; }
-            public int Gold { get; set; }
-            public int Exp { get; set; }
-
-            public Dungeon(int dmg, int def, int gold, int exp)
-            {
-                Random damage = new Random();
-                RecommendDef = def;
-                Damage = damage.Next(dmg - 15, dmg + 1);
-                Gold = gold;
-                Exp = exp;
-            }
-        }
-
         public class Stage
         {
             public int choice0_startScene() // 0. 시작 화면
@@ -396,78 +346,72 @@ namespace _4weekTask
                     }
                 }
             }
-            public void enterDungeon() // 4. 던전입장
+            public void choice4_dungeon() // 4. 던전입장
             {
                 Console.Clear();
                 Console.WriteLine("권장 능력치를 확인 후, 입장하실 던전의 번호를 입력해 주세요.\n\n" +
                     "1. 쉬운 던전 | 방어력 5 이상 권장\n2. 일반 던전 | 방어력 11 이상 권장\n3. 어려운 던전 | 방어력 17 이상 권장\n0. 나가기");
                 int choice = choiceInput(3, "올바른 번호를 입력해 주세요.");
-                if (choice == 1) // 1번 던전
+                if (choice == 1)   // 1번 던전
                 {
-                    Dungeon easy = new Dungeon(35, 5, 1000, 1); // 던전초기화 및 생성
-                    player.Dungeon = easy;
-                    if (player.Def < easy.RecommendDef)
+                    enterDungeon(35,5,1000,1);
+                }
+                if (choice == 2)   // 2번 던전
+                {
+                    enterDungeon(35, 11, 1700, 1);
+                }
+                if (choice == 3)   // 3번 던전
+                {
+                    enterDungeon(35, 17, 2500, 1);
+                }
+            }
+
+            public void enterDungeon(int dmg, int def, int gold, int exp)
+            {
+                Random damage = new Random();
+                int Damage = damage.Next(dmg - 15, dmg + 1);
+                if (player.Def < def)
+                {
+                    Random diceEyes = new Random();
+                    int dice = diceEyes.Next(0, 5);
+                    if (dice >= 3)
                     {
-                        Random diceEyes = new Random();
-                        int dice = diceEyes.Next(0, 5);
-                        if (dice >= 3)
-                        {
-                            player.clearDungeon();
-                        }
-                        else
-                        {
-                            player.escapeDmg();
-                        }
+                        clearDungeon(Damage, def, gold, exp);
                     }
                     else
                     {
-                        player.clearDungeon();
+                        player.Health = (int)(player.Health * 0.5f);
+                        Console.WriteLine($"몬스터를 소탕하지 못하고, 던전을 탈출했습니다.\n현재 체력 : {player.Health}");
+                        Console.ReadLine();
                     }
                 }
-                if (choice == 2) // 2번 던전
+                else
                 {
-                    Dungeon nomal = new Dungeon(35, 11, 1700, 1);
-                    player.Dungeon = nomal;
-                    if (player.Def < nomal.RecommendDef)
-                    {
-                        Random diceEyes = new Random();
-                        int dice = diceEyes.Next(0, 5);
-                        if (dice >= 3)
-                        {
-                            player.clearDungeon();
-                        }
-                        else
-                        {
-                            player.escapeDmg();
-                        }
-                    }
-                    else
-                    {
-                        player.clearDungeon();
-                    }
+                    clearDungeon(Damage, def, gold, exp);
                 }
-                if (choice == 3) // 3번 던전
+            }
+
+            public void clearDungeon(int Damage,int def,int gold,int exp)
+            {
+                int before = gold;
+                player.Health -= (int)(Damage - (player.Def - def));
+                Random g = new Random();
+                player.Gold += g.Next((int)(gold + (gold * player.Atk * 0.01f)), (int)(gold + (gold * player.Atk * 0.02f)));
+                player.Exp += exp;
+                Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {player.Health}\n획득 골드 : {player.Gold - before}\n보유 골드 : {player.Gold}\n" +
+                                  $"{exp} 의 경험치를 획득했습니다.");
+                if (player.Exp >= player.Level)
                 {
-                    Dungeon hard = new Dungeon(35, 11, 1700, 1);
-                    player.Dungeon = hard;
-                    if (player.Def < hard.RecommendDef)
+                    ++player.Level;
+                    player.Exp = 0;
+                    player.Def += 1;
+                    if (player.Level % 2 == 0)
                     {
-                        Random diceEyes = new Random();
-                        int dice = diceEyes.Next(0, 5);
-                        if (dice >= 3)
-                        {
-                            player.clearDungeon();
-                        }
-                        else
-                        {
-                            player.escapeDmg();
-                        }
+                        player.Atk += 1;
                     }
-                    else
-                    {
-                        player.clearDungeon();
-                    }
+                    Console.WriteLine($"레벨업!\n현재 레벨 : {player.Level}");
                 }
+                Console.ReadLine();
             }
 
             public void rest() // 5.휴식하기
@@ -640,7 +584,7 @@ namespace _4weekTask
             }
 
             // 플레이어 , 아이템 생성
-            Warrior player = new Warrior("Jack");
+            Warrior player = new Warrior("chad");
             List<Item> inventory = new List<Item>();
             List<Item> itemshop = new List<Item>();
             Weapon weapon1 = new Weapon("낡은 검", 2, 0, 600, "쉽게 볼 수 있는 낡은 검 입니다.");
@@ -678,7 +622,7 @@ namespace _4weekTask
                     }
                     if (choice == 4) // 4.던전입장
                     {
-                        enterDungeon();
+                        choice4_dungeon();
                     }
                     if (choice == 5) // 5.휴식하기
                     {

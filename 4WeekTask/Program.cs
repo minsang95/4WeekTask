@@ -351,7 +351,7 @@ namespace _4weekTask
                 Console.Clear();
                 Console.WriteLine($"권장 능력치를 확인 후, 입장하실 던전의 번호를 입력해 주세요. ( 현재 체력 : {player.Health} )\n\n" +
                     "1. 쉬운 던전 | 방어력 5 이상 권장\n2. 일반 던전 | 방어력 11 이상 권장\n3. 어려운 던전 | 방어력 17 이상 권장\n0. 나가기");
-                int choice = choiceInput(3, "올바른 번호를 입력해 주세요.");
+                int choice = choiceInput(3, "올바른 번호를 입력해 주세요.\n1. 쉬운 던전 | 방어력 5 이상 권장\n2. 일반 던전 | 방어력 11 이상 권장\n3. 어려운 던전 | 방어력 17 이상 권장\n0. 나가기");
                 if (choice == 1)   // 1번 던전
                 {
                     enterDungeon(35,5,1000,1);

@@ -164,8 +164,8 @@ namespace _4weekTask
             {
                 Console.Clear();
                 Console.WriteLine($"캐릭터의 정보가 표시됩니다.\n\n" +
-                                  $"Lv. {player.Level}\nClass {player.Class}\n공격력 : {player.Atk}\n" +
-                                  $"방어력 : {player.Def}\n체 력 : {player.Health}\nGold : {player.Gold} G\n\n" +
+                                  $"Lv. {player.Level}\nClass {player.Class}\n공격력 : {player.Atk}\n방어력 : {player.Def}\n" +
+                                  $"체 력 : {player.Health}\nGold : {player.Gold} G\n경험치 : {player.Exp} / {player.Level}\n\n" +
                                   $"장착 무기 : {player.Weapon.Name} | 공격력 +{player.Weapon.Atk} 방어력 +{player.Weapon.Def} | {player.Weapon.Info}\n" +
                                   $"장착 방어구 : {player.Armor.Name} | 공격력 +{player.Armor.Atk} 방어력 +{player.Armor.Def} | {player.Armor.Info}\n" +
                                   $"\n0. 나가기\n");
@@ -381,15 +381,15 @@ namespace _4weekTask
 
             public void enterDungeon(int dmg, int def, int gold, int exp)
             {
-                Random damage = new Random();
-                int Damage = damage.Next(dmg - 15, dmg + 1);
+                Random d = new Random();
+                int damage = d.Next(dmg - 15, dmg + 1);
                 if (player.Def < def)
                 {
                     Random diceEyes = new Random();
                     int dice = diceEyes.Next(0, 5);
                     if (dice >= 3)
                     {
-                        clearDungeon(Damage, def, gold, exp);
+                        clearDungeon(damage, def, gold, exp);
                     }
                     else
                     {
@@ -400,16 +400,17 @@ namespace _4weekTask
                 }
                 else
                 {
-                    clearDungeon(Damage, def, gold, exp);
+                    clearDungeon(damage, def, gold, exp);
                 }
             }
 
-            public void clearDungeon(int Damage,int def,int gold,int exp)
+            public void clearDungeon(int damage,int def,int gold,int exp)
             {
                 int befG = player.Gold;
                 int befH = player.Health;
-                player.Health -= (int)(Damage - (player.Def - def));
-                if(player.Health <= 0)
+                if(damage - (player.Def - def) > 0)
+                    player.Health -= (int)(damage - (player.Def - def));
+                if (player.Health <= 0)
                 {
                     Console.WriteLine($"몬스터게 치명적인 공격({befH - player.Health})을 받았습니다. 현재 체력 : {player.Health}");
                 }
@@ -418,8 +419,8 @@ namespace _4weekTask
                     Random g = new Random();
                     player.Gold += g.Next((int)(gold + (gold * player.Atk * 0.01f)), (int)(gold + (gold * player.Atk * 0.02f)));
                     player.Exp += exp;
-                    Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {player.Health}\n획득 골드 : {player.Gold - befG}\n보유 골드 : {player.Gold}\n" +
-                                      $"{exp} 의 경험치를 획득했습니다.");
+                    Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n받은 데미지 : {befH - player.Health}\n현재 체력 : {player.Health}\n" +
+                                      $"획득 골드 : {player.Gold - befG}\n보유 골드 : {player.Gold}\n{exp} 의 경험치를 획득했습니다.");
                     if (player.Exp >= player.Level)
                     {
                         player.Exp = player.Exp - player.Level;
@@ -438,7 +439,7 @@ namespace _4weekTask
             public void rest() // 5.휴식하기
             {
                 Console.Clear();
-                Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G)\n\n1. 휴식하기\n0. 나가기");
+                Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G) (현재 체력 : {player.Health})\n\n1. 휴식하기\n0. 나가기");
                 int choice = choiceInput(1, "1. 휴식하기 0. 나가기");
                 if (choice == 1)
                 {
@@ -446,7 +447,7 @@ namespace _4weekTask
                     {
                         player.Gold -= 500;
                         player.Health = 100;
-                        Console.WriteLine($"휴식을 완료했습니다. (보유 골드 : {player.Gold} G)");
+                        Console.WriteLine($"휴식을 완료했습니다. (보유 골드 : {player.Gold} G) (현재 체력 : {player.Health})");
                         Console.ReadLine();
                     }
                     else

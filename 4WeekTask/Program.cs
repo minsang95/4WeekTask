@@ -349,7 +349,7 @@ namespace _4weekTask
             public void choice4_dungeon() // 4. 던전입장
             {
                 Console.Clear();
-                Console.WriteLine("권장 능력치를 확인 후, 입장하실 던전의 번호를 입력해 주세요.\n\n" +
+                Console.WriteLine($"권장 능력치를 확인 후, 입장하실 던전의 번호를 입력해 주세요. ( 현재 체력 : {player.Health} )\n\n" +
                     "1. 쉬운 던전 | 방어력 5 이상 권장\n2. 일반 던전 | 방어력 11 이상 권장\n3. 어려운 던전 | 방어력 17 이상 권장\n0. 나가기");
                 int choice = choiceInput(3, "올바른 번호를 입력해 주세요.");
                 if (choice == 1)   // 1번 던전
@@ -393,25 +393,33 @@ namespace _4weekTask
 
             public void clearDungeon(int Damage,int def,int gold,int exp)
             {
-                int before = gold;
+                int befG = player.Gold;
+                int befH = player.Health;
                 player.Health -= (int)(Damage - (player.Def - def));
-                Random g = new Random();
-                player.Gold += g.Next((int)(gold + (gold * player.Atk * 0.01f)), (int)(gold + (gold * player.Atk * 0.02f)));
-                player.Exp += exp;
-                Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {player.Health}\n획득 골드 : {player.Gold - before}\n보유 골드 : {player.Gold}\n" +
-                                  $"{exp} 의 경험치를 획득했습니다.");
-                if (player.Exp >= player.Level)
+                if(player.Health <= 0)
                 {
-                    ++player.Level;
-                    player.Exp = 0;
-                    player.Def += 1;
-                    if (player.Level % 2 == 0)
-                    {
-                        player.Atk += 1;
-                    }
-                    Console.WriteLine($"레벨업!\n현재 레벨 : {player.Level}");
+                    Console.WriteLine($"몬스터게 치명적인 공격({befH - player.Health})을 받았습니다. 현재 체력 : {player.Health}");
                 }
-                Console.ReadLine();
+                else
+                {
+                    Random g = new Random();
+                    player.Gold += g.Next((int)(gold + (gold * player.Atk * 0.01f)), (int)(gold + (gold * player.Atk * 0.02f)));
+                    player.Exp += exp;
+                    Console.WriteLine($"몬스터를 소탕하고, 골드 상자를 발견했습니다!.\n현재 체력 : {player.Health}\n획득 골드 : {player.Gold - befG}\n보유 골드 : {player.Gold}\n" +
+                                      $"{exp} 의 경험치를 획득했습니다.");
+                    if (player.Exp >= player.Level)
+                    {
+                        ++player.Level;
+                        player.Exp = 0;
+                        player.Def += 1;
+                        if (player.Level % 2 == 0)
+                        {
+                            player.Atk += 1;
+                        }
+                        Console.WriteLine($"레벨업!\n현재 레벨 : {player.Level}");
+                    }
+                    Console.ReadLine();
+                }
             }
 
             public void rest() // 5.휴식하기
@@ -583,7 +591,7 @@ namespace _4weekTask
                 return choice;
             }
 
-            // 플레이어 , 아이템 생성
+            // 플레이어, 인벤토리, 상점, 아이템 생성
             Warrior player = new Warrior("chad");
             List<Item> inventory = new List<Item>();
             List<Item> itemshop = new List<Item>();
@@ -644,7 +652,6 @@ namespace _4weekTask
             {
                 Stage stage = new Stage();
                 stage.Playgame();
-
             }
 
         }

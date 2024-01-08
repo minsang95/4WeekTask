@@ -409,7 +409,6 @@ namespace _4weekTask
                                       $"{exp} 의 경험치를 획득했습니다.");
                     if (player.Exp >= player.Level)
                     {
-                        ++player.Level;
                         player.Exp = player.Exp - player.Level;
                         player.Def += 1;
                         if (player.Level % 2 == 0)
@@ -417,6 +416,7 @@ namespace _4weekTask
                             player.Atk += 1;
                         }
                         Console.WriteLine($"레벨업!\n현재 레벨 : {player.Level}");
+                        player.Level++;
                     }
                     Console.ReadLine();
                 }

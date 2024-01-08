@@ -669,12 +669,7 @@ namespace _4weekTask
             static void Main(string[] args)
             {
                 Stage stage = new Stage();
-                stage.itemshop.Add(weapon1);
-                stage.itemshop.Add(weapon2);
-                stage.itemshop.Add(weapon3);
-                stage.itemshop.Add(armor1);
-                stage.itemshop.Add(armor2);
-                stage.itemshop.Add(armor3);
+                stage.Restart();
                 stage.Playgame();
             }
 

@@ -128,7 +128,7 @@ namespace _4weekTask
             public bool SoldOut { get; set; }
             public Armor(string name, int atk, int def, int price, string info)
             {
-                Name = $"{name}";
+                Name = name;
                 Atk = atk;
                 Def = def;
                 Price = price;
@@ -410,7 +410,7 @@ namespace _4weekTask
                     if (player.Exp >= player.Level)
                     {
                         ++player.Level;
-                        player.Exp = 0;
+                        player.Exp = player.Exp - player.Level;
                         player.Def += 1;
                         if (player.Level % 2 == 0)
                         {

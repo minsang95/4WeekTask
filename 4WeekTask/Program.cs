@@ -568,7 +568,7 @@ namespace _4weekTask
                 }
             }
 
-            public bool end()
+            public bool end() // 7.게임종료
             {
                 Console.Clear();
                 Console.WriteLine("게임을 포기하시겠습니까?\n\n1. 종료 0. 나가기");
@@ -579,7 +579,7 @@ namespace _4weekTask
                 return false;
             }
 
-            public void Restart()
+            public void Restart() // 다시 시작
             {
                 player = new Warrior("chad");
                 inventory = new List<Item>();
@@ -592,7 +592,7 @@ namespace _4weekTask
                 itemshop.Add(weapon3);
             }
 
-            public int choiceInput(int limit, string action)
+            public int choiceInput(int limit, string action) // 선택지 입력 메서드
             {
                 string input = Console.ReadLine();
                 int choice;
